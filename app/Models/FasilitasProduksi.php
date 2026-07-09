@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Produksi extends Model
+class FasilitasProduksi extends Model
 {
-    protected $table = 'produksi';
+    protected $table = 'fasilitas_produksi';
 
-    protected $primaryKey = 'id_produksi';
+    protected $primaryKey = 'id_fasilitas';
 
     protected $fillable = [
-        'fields_id',
-        'produksi_minyak',
-        'produksi_gas',
-        'tanggal_produksi',
+        'id_wilayah',
+        'nama_fasilitas',
+        'jenis_fasilitas',
+        'jumlah',
     ];
 
     public function wilayahKerja(): BelongsTo
