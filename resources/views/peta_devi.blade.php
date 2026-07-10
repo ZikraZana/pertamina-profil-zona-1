@@ -31,14 +31,18 @@
   .callout rect { rx: 4; }
   .callout text { font-size: 9px; fill: #fff; font-weight: 600; }
   .callout line { stroke: #64748b; stroke-width: 1; }
+
+  #floating-card { transition: opacity .15s, transform .15s; }
 </style>
 </head>
 <body class="bg-slate-100 h-screen flex flex-col p-6">
 
   <h1 class="text-2xl font-bold text-blue-900 mb-4 text-center">Peta Wilayah Kerja PHR Zona 1</h1>
 
+  <div class="flex-1 w-full flex gap-4 overflow-hidden">
+
   {{-- PETA --}}
-  <div class="bg-white rounded-xl shadow-lg border border-slate-300 p-4 relative flex-1 w-full flex items-center justify-center overflow-hidden">
+  <div class="bg-white rounded-xl shadow-lg border border-slate-300 p-4 relative flex-1 flex items-center justify-center overflow-hidden">
 
     <svg width="auto" height="100%" viewBox="0 0 460 413" role="img" style="max-width:100%;"> 
       <title>Peta provinsi Sumatra</title>
@@ -62,13 +66,14 @@
       <text class="prov-label" x="304.3" y="308.8">Sumsel</text>
       <text class="prov-label" x="327.9" y="360.5">Lampung</text>
 
-      < id="titik-wk">
+      <g id="titik-wk">
       <g class="point" data-nama="PHE-NSO - 1998" data-color="#2f8f8f" data-side="right" data-p="ID-SU"><circle cx="93" cy="45" r="3" /></g>
       <g class="point" data-nama="Rantau - 1929" data-color="#1e3a5f" data-side="right" data-p="ID-SU"><circle cx="112" cy="75" r="3" /></g>
       <g class="point" data-nama="Pangkalan Susu - 1885" data-color="#1e3a5f" data-side="left" data-p="ID-SU"><circle cx="128" cy="88" r="3" /></g>
       <g class="point" data-nama="Lirik - 1940" data-color="#1e3a5f" data-side="right" data-p="ID-RI"><circle cx="255" cy="210" r="3" /></g>
       <g class="point" data-nama="Jambi - 1922" data-color="#1e3a5f" data-side="right" data-p="ID-JA"><circle cx="285" cy="248" r="3" /></g>
       <g class="point" data-nama="PHE-Jambi Merang - 2011" data-color="#2f8f8f" data-side="right" data-p="ID-SS"><circle cx="298" cy="275" r="3" /></g>
+      </g>
 
       <g class="callout" id="callout">
       <line id="callout-line" x1="0" y1="0" x2="0" y2="0" />
@@ -77,6 +82,69 @@
       </g>
     </svg>
   </div>
+  </div>
+
+{{-- OVERVIEW CARD --}}
+<aside id="overview-card" class="absolute top-[55%] -translate-y-1/2 left-8 w-72 max-h-[75%] bg-white rounded-xl  shadow-2xl border border-slate-200 p-5 overflow-y-auto z-40">
+  <h2 class="text-lg font-bold text-blue-900 mb-4 pr-6">Overview Zona 1</h2>
+
+  <div class="mb-4">
+    <p class="text-xs font-semibold text-slate-400 uppercase mb-1">Cakupan Lokasi</p>
+    <p class="text-sm text-slate-700">5 Provinsi, 14 Kabupaten/Kota</p>
+    <ul class="text-sm text-slate-600 mt-1 space-y-0.5">
+      <li>NAD : 1 Kabupaten</li>
+      <li>Sumatera Utara : 4 Kabupaten/Kota</li>
+      <li>Riau : 3 Kabupaten</li>
+      <li>Jambi : 5 Kabupaten/Kota</li>
+      <li>Sumatera Selatan : 1 Kabupaten</li>
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <p class="text-xs font-semibold text-slate-400 uppercase mb-1">Wilayah Kerja</p>
+    <p class="text-sm text-slate-700">WK Operator</p>
+    <ul class="text-sm text-slate-600 mt-1 space-y-0.5">
+      <li>PHE Jambi Merang (GS)</li>
+      <li>PHE NSO (GS)</li>
+      <li>PEP ASSET 1 (Sumut: Field Rantau, dan P.Susu, Riau: Lirik) (CR)</li>
+      <li>KSO SEBWP Meruap (CR)</li>
+      <li>KSO Tamiang Raya Energy (CR)</li>
+    </ul>
+    <p class="text-sm text-slate-700">WK Non-Operator</p>
+    <ul class="text-sm text-slate-600 mt-1 space-y-0.5">
+      <li>JABUNG (CR)</li>
+      <li>KAKAP (CR)</li>
+    </ul>
+  </div>
+</aside>
+
+{{-- FLOATING CARDS --}}
+<div id="floating-stack" class="hidden fixed top-28 right-8 w-80 flex flex-col gap-3 z-40">
+
+  <button id="btn-close-floating" class="self-end text-slate-400 hover:text-slate-700 text-lg leading-none -mb-1">✕</button>
+
+  {{-- Card 1: Wilayah Kerja --}}
+  <div class="bg-white rounded-xl shadow-2xl border border-slate-200 p-4">
+    <p class="text-xs font-semibold text-blue-700 uppercase mb-1">Wilayah Kerja</p>
+    <h3 id="floating-title" class="text-base font-bold text-blue-900 mb-2"></h3>
+    <div id="floating-wilayah-body" class="text-sm text-slate-600 space-y-1"></div>
+  </div>
+
+  {{-- Card 2: Data Produksi --}}
+  <div class="bg-white rounded-xl shadow-2xl border border-slate-200 p-4">
+    <p class="text-xs font-semibold text-blue-700 uppercase mb-1">Data Produksi</p>
+    <div id="floating-produksi-body" class="text-sm text-slate-600 space-y-1"></div>
+  </div>
+
+  {{-- Card 3: Fasilitas Produksi --}}
+  <div class="bg-white rounded-xl shadow-2xl border border-slate-200 p-4">
+    <p class="text-xs font-semibold text-blue-700 uppercase mb-1">Fasilitas Produksi</p>
+    <div id="floating-fasilitas-body" class="text-sm text-slate-600 space-y-1 mb-3"></div>
+    <button id="btn-lihat-detail-floating" type="button" class="text-sm font-medium text-blue-700 hover:text-blue-900">
+      Lihat Detail Lengkap →
+    </button>
+  </div>
+</div>
 
   {{-- MODAL --}}
   <div id="modal-overlay">
@@ -112,19 +180,28 @@ function openModal(kode, namaProvinsi) {
         modalBody.innerHTML = `<p class="text-slate-400 italic">${res.message}</p>`;
         return;
       }
-      const d = res.data;
+      const w = res.data.wilayah ?? {};
+      const p = res.data.produksi ?? {};
+      const f = res.data.fasilitas ?? [];
+
       modalBody.innerHTML = `
-        <p><span class="font-semibold">Cakupan Lokasi:</span> ${d.cakupan_lokasi ?? '-'}</p>
-        <p><span class="font-semibold">Wilayah Kerja Operator:</span> ${d.wilayah_kerja_operator ?? '-'}</p>
-        <p><span class="font-semibold">Program Kerja:</span> ${d.program_kerja ?? '-'}</p>
-        <p><span class="font-semibold">Rig Pemboran / WOWS:</span> ${d.rig_pemboran ?? '-'} / ${d.rig_wows ?? '-'}</p>
+        <p class="font-semibold text-blue-900 mb-1">Wilayah Kerja</p>
+        <p><span class="font-semibold">Provinsi:</span> ${w.provinsi ?? '-'}</p>
+        <p><span class="font-semibold">Kabupaten/Kota:</span> ${w.kabupaten_kota ?? '-'}</p>
+        <p><span class="font-semibold">Jenis WK:</span> ${w.jenis_wk ?? '-'}</p>
+        <p><span class="font-semibold">Tahun Beroperasi:</span> ${w.tahun_beroperasi ?? '-'}</p>
+        <p><span class="font-semibold">Luas Wilayah:</span> ${w.luas_wilayah ?? '-'} km²</p>
+        <p><span class="font-semibold">Deskripsi:</span> ${w.deskripsi ?? '-'}</p>
         <hr class="my-2">
-        <p class="font-semibold text-blue-900">Produksi (${d.tanggal_produksi ?? '-'})</p>
-        <p>Oil: ${d.produksi_oil_bopd ?? '-'} BOPD</p>
-        <p>Gas: ${d.produksi_gas_mmscfd ?? '-'} MMSCFD</p>
+        <p class="font-semibold text-blue-900 mb-1">Data Produksi (${p.tanggal_produksi ?? '-'})</p>
+        <p>Minyak: ${p.produksi_minyak ?? '-'} BOPD</p>
+        <p>Gas: ${p.produksi_gas ?? '-'} MMSCFD</p>
         <hr class="my-2">
-        <p class="font-semibold text-blue-900">Fasilitas Produksi</p>
-        <p>Struktur: ${d.jumlah_struktur ?? '-'} | Stasiun Pengumpul: ${d.stasiun_pengumpul ?? '-'}</p>
+        <p class="font-semibold text-blue-900 mb-1">Fasilitas Produksi</p>
+        ${f.length
+          ? f.map(item => `<p>${item.nama_fasilitas} — ${item.jenis_fasilitas} (${item.jumlah})</p>`).join('')
+          : '<p class="text-slate-400 italic">Belum ada data fasilitas.</p>'}
+        <p class="text-xs text-slate-400 mt-4">BOPD: Barrels of Oil Per Day · MMSCFD: Million Metric Standard Cubic Feet per Day</p>
       `;
     })
     .catch(() => {
@@ -132,18 +209,83 @@ function openModal(kode, namaProvinsi) {
     });
 }
 
-btnCloseModal.addEventListener('click', () => modalOverlay.classList.remove('show'));
-modalOverlay.addEventListener('click', (e) => {
-  if (e.target === modalOverlay) modalOverlay.classList.remove('show');
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') modalOverlay.classList.remove('show');
-});
+    btnCloseModal.addEventListener('click', () => modalOverlay.classList.remove('show'));
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('show');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modalOverlay.classList.remove('show');
+    });
 
 const callout = document.getElementById('callout');
 const calloutLine = document.getElementById('callout-line');
 const calloutRect = document.getElementById('callout-rect');
 const calloutText = document.getElementById('callout-text');
+
+const floatingStack = document.getElementById('floating-stack');
+const floatingTitle = document.getElementById('floating-title');
+const floatingWilayahBody = document.getElementById('floating-wilayah-body');
+const floatingProduksiBody = document.getElementById('floating-produksi-body');
+const floatingFasilitasBody = document.getElementById('floating-fasilitas-body');
+const btnCloseFloating = document.getElementById('btn-close-floating');
+const btnLihatDetailFloating = document.getElementById('btn-lihat-detail-floating');
+
+let floatingKode = null;
+let floatingNama = null;
+let floatingData = null; // simpan data lengkap untuk dipakai modal
+
+function showFloatingCard(kode, namaTitik) {
+  floatingKode = kode;
+  floatingNama = namaTitik;
+
+  floatingTitle.textContent = namaTitik;
+  floatingWilayahBody.innerHTML = '<p class="text-slate-400">Memuat...</p>';
+  floatingProduksiBody.innerHTML = '';
+  floatingFasilitasBody.innerHTML = '';
+  floatingStack.classList.remove('hidden');
+
+  fetch(`/api/wilayah-kerja/${kode}`)
+    .then(res => res.json())
+    .then(res => {
+      if (!res.found) {
+        floatingWilayahBody.innerHTML = `<p class="text-slate-400 italic">${res.message}</p>`;
+        return;
+      }
+      floatingData = res.data;
+      const w = res.data.wilayah ?? {};
+      const p = res.data.produksi ?? {};
+      const f = res.data.fasilitas ?? [];
+
+      floatingWilayahBody.innerHTML = `
+        <p><span class="font-semibold">Provinsi:</span> ${w.provinsi ?? '-'}</p>
+        <p><span class="font-semibold">Kab/Kota:</span> ${w.kabupaten_kota ?? '-'}</p>
+        <p><span class="font-semibold">Jenis WK:</span> ${w.jenis_wk ?? '-'}</p>
+        <p><span class="font-semibold">Luas:</span> ${w.luas_wilayah ?? '-'} km²</p>
+      `;
+
+      floatingProduksiBody.innerHTML = `
+        <p><span class="font-semibold">Minyak:</span> ${p.produksi_minyak ?? '-'} BOPD</p>
+        <p><span class="font-semibold">Gas:</span> ${p.produksi_gas ?? '-'} MMSCFD</p>
+        <p><span class="font-semibold">Tanggal:</span> ${p.tanggal_produksi ?? '-'}</p>
+      `;
+
+      floatingFasilitasBody.innerHTML = f.length
+        ? f.slice(0, 2).map(item => `<p>${item.nama_fasilitas} (${item.jumlah})</p>`).join('')
+        : '<p class="text-slate-400 italic">Belum ada data fasilitas.</p>';
+    })
+    .catch(() => {
+      floatingWilayahBody.innerHTML = '<p class="text-red-400 italic">Gagal memuat data.</p>';
+    });
+}
+
+btnCloseFloating.addEventListener('click', () => {
+  floatingStack.classList.add('hidden');
+});
+
+btnLihatDetailFloating.addEventListener('click', () => {
+  floatingStack.classList.add('hidden');
+  openModal(floatingKode, floatingNama);
+});
 
 document.querySelectorAll('.point').forEach(el => {
   const circle = el.querySelector('circle');
@@ -188,7 +330,7 @@ document.querySelectorAll('.point').forEach(el => {
 
   el.addEventListener('click', () => {
   callout.classList.remove('show');
-  openModal(el.dataset.p, label);
+  showFloatingCard(el.dataset.p, label);
   });
 });
 </script>

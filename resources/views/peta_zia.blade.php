@@ -91,13 +91,9 @@
             background: #2547a8;
         }
 
-        /* Card floating di sebelah kanan peta (info wilayah kerja) */
         .floating-card {
-            position: absolute;
-            width: 300px;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
             border: 1px solid #e2e8f0;
             padding: 16px 18px;
             opacity: 0;
@@ -146,8 +142,19 @@
             background: #2547a8;
         }
 
-        /* Card statis di sebelah kiri peta (info geografis) — selalu tampil,
-           tanpa tombol tutup, tidak terpengaruh klik label mana pun */
+        .floating-stack {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: calc(100% - 48px);
+            overflow-y: auto; 
+            shadow: 0 8px 24px rgba(0, 0, 0, .15);  
+        }
+
         .static-card {
             position: absolute;
             width: 280px;
@@ -162,7 +169,6 @@
             overflow-y: auto;
         }
 
-        /* Modal detail, muncul di tengah layar */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -316,8 +322,8 @@
             @endforeach
 
             @foreach ($wilayahKerja as $w)
-                <circle class="wk-dot" data-dot="{{ $w['kode'] }}" cx="{{ $w['dx'] }}" cy="{{ $w['dy'] }}"
-                    r="2.8" />
+                <circle class="wk-dot" data-dot="{{ $w['kode'] }}" data-nama="{{ $w['nama'] }}"
+                    data-provinsi="{{ $w['provinsi'] }}" cx="{{ $w['dx'] }}" cy="{{ $w['dy'] }}" r="2.8" />
             @endforeach
 
             @foreach ($wilayahKerja as $w)
@@ -335,45 +341,53 @@
 
         {{-- CARD GEOGRAFIS: statis di kiri, selalu tampil, tanpa tombol tutup --}}
         <div id="card-geografis" class="static-card">
-            <h2 class="text-base font-bold text-blue-900 mb-3">Geografis</h2>
-            <div class="text-sm space-y-2 text-slate-700">
+            <h2 class="text-base font-bold text-blue-900 mb-3">Overview Zona 1</h2>
+            <div class="text-xs space-y-2 text-slate-700">
                 {{-- Ganti/lengkapi field-field ini sesuai data geografis yang Anda miliki --}}
-                <p><span class="font-semibold">Pulau:</span> Sumatra</p>
-                <p><span class="font-semibold">Region:</span> Regional 1</p>
-                <p><span class="font-semibold">Luas Wilayah Kerja:</span> - km²</p>
-                <p><span class="font-semibold">Topografi:</span> -</p>
-                <p><span class="font-semibold">Iklim:</span> -</p>
-                <p><span class="font-semibold">Koordinat Acuan:</span> -</p>
-                <p><span class="font-semibold">Batas Wilayah:</span></p>
-                <ul class="list-disc list-inside pl-1 text-slate-600">
-                    <li>Utara: -</li>
-                    <li>Selatan: -</li>
-                    <li>Timur: -</li>
-                    <li>Barat: -</li>
-                </ul>
+                <p><span class="font-bold">Cakupan Lokasi</p>
+                <p><span class="font-semibold">5 Provinsi, 14 Kabupaten/Kota</p>
+                <p><span class="font-normal">NAD:</span> 1 Kabupaten</p>
+                <p><span class="font-normal">Sumatera Utara:</span> 4 Kabupaten/Kota</p>
+                <p><span class="font-normal">Riau:</span> 3 Kabupaten</p>
+                <p><span class="font-normal">Jambi:</span> 5 Kabupaten/Kota</p>
+                <p><span class="font-normal">Sumatera Selatan:</span> 1 Kabupaten</p>
+                <br>
+                <p><span class="font-bold">Wilayah Kerja</p>
+                <p><span class="font-semibold">WK Operator</p>
+                <p><span class="font-normal">PHE Jambi Merang (GS)</p>
+                <p><span class="font-normal">PHE NSO (GS)</p>
+                <p><span class="font-normal">PEP ASSET 1 (Sumut: Field Rantau, dan P.Susu, Riau: Lirik) (CR)</p>
+                <p><span class="font-normal">KSO SEBWP Meruap (CR)</p>
+                <p><span class="font-normal">KSO Tamiang Raya Energy (CR)</p>
+                <p><span class="font-semibold">WK Non-Operator</p>
+                <p><span class="font-normal">JABUNG (CR)</p>
+                <p><span class="font-normal">KAKAP (CR)</p>
             </div>
         </div>
 
-        {{-- CARD 1: Informasi umum wilayah kerja (kanan-atas, floating) --}}
-        <div id="card-info" class="floating-card" style="top: 24px; right: 24px;">
+        <div class="floating-stack">
+
+        {{-- CARD 1: Informasi umum wilayah kerja --}}
+        <div id="card-info" class="floating-card">
             <button class="close-btn" id="closeCardInfo">&times;</button>
             <h2 id="cardInfoTitle" class="text-base font-bold text-blue-900 mb-2 pr-4">-</h2>
-            <div id="cardInfoBody" class="text-sm space-y-1 text-slate-700"></div>
+            <div id="cardInfoBody" class="text-xs space-y-1 text-slate-700"></div>
             <button class="detail-btn" data-detail="all">Detail</button>
         </div>
 
-        {{-- CARD 2: Produksi (kanan-tengah, floating) — tanpa tombol close & detail --}}
-        <div id="card-produksi" class="floating-card" style="top: 226px; right: 24px;">
+        {{-- CARD 2: Produksi --}}
+        <div id="card-produksi" class="floating-card">
             <h2 class="text-base font-bold text-blue-900 mb-2 pr-4">Produksi</h2>
-            <div id="cardProduksiBody" class="text-sm space-y-1 text-slate-700"></div>
+            <div id="cardProduksiBody" class="text-xs space-y-1 text-slate-700"></div>
         </div>
 
-        {{-- CARD 3: Fasilitas (kanan-bawah, floating) — tanpa tombol close & detail --}}
-        <div id="card-fasilitas" class="floating-card" style="top: 366px; right: 24px;">
+        {{-- CARD 3: Fasilitas --}}
+        <div id="card-fasilitas" class="floating-card">
             <h2 class="text-base font-bold text-blue-900 mb-2 pr-4">Fasilitas</h2>
-            <div id="cardFasilitasBody" class="text-sm space-y-1 text-slate-700"></div>
+            <div id="cardFasilitasBody" class="text-xs space-y-1 text-slate-700"></div>
         </div>
-    </div>
+
+        </div>
 
     {{-- MODAL DETAIL: muncul di tengah layar --}}
     <div id="modal-overlay" class="modal-overlay">
@@ -460,17 +474,24 @@
 
         // Hover di titik/dot wilayah kerja -> munculkan badge lewat area sekitar titik.
         document.querySelectorAll('.wk-dot').forEach(dot => {
-            const key = dot.dataset.dot;
-            const hoverZone = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            hoverZone.setAttribute('cx', dot.getAttribute('cx'));
-            hoverZone.setAttribute('cy', dot.getAttribute('cy'));
-            hoverZone.setAttribute('r', 8);
-            hoverZone.setAttribute('fill', 'transparent');
-            hoverZone.style.cursor = 'pointer';
-            dot.parentNode.appendChild(hoverZone);
+        const key = dot.dataset.dot;
+        const nama = dot.dataset.nama;
+        const provinsi = dot.dataset.provinsi;
 
-            hoverZone.addEventListener('mouseenter', () => showBadge(key));
-            hoverZone.addEventListener('mouseleave', () => scheduleHide(key));
+        const hoverZone = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        hoverZone.setAttribute('cx', dot.getAttribute('cx'));
+        hoverZone.setAttribute('cy', dot.getAttribute('cy'));
+        hoverZone.setAttribute('r', 8);
+        hoverZone.setAttribute('fill', 'transparent');
+        hoverZone.style.cursor = 'pointer';
+        dot.parentNode.appendChild(hoverZone);
+
+        hoverZone.addEventListener('mouseenter', () => showBadge(key));
+        hoverZone.addEventListener('mouseleave', () => scheduleHide(key));
+        hoverZone.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setActive(key, nama, provinsi);
+            });
         });
 
         // Hover & klik pada badge
@@ -503,16 +524,39 @@
             // blok ini dengan fetch() seperti sebelumnya.
             // ============================================================
             const d = {
-                cakupan_lokasi: null,
-                wilayah_kerja_operator: null,
-                program_kerja: null,
-                rig_pemboran: null,
-                rig_wows: null,
+                nama_wilayah: null,
+                provinsi: null,
+                kabupaten_kota: null,
+                jenis_wk: null,
+                tahun_beroperasi: null,
+                luas_wilayah: null,
+                deskripsi: null,
+                produksi_minyak: null,
+                produksi_gas: null,
                 tanggal_produksi: null,
-                produksi_oil_bopd: null,
-                produksi_gas_mmscfd: null,
-                jumlah_struktur: null,
-                stasiun_pengumpul: null,
+                nama_fasilitas: null,
+                jenis_fasilitas: null,
+                jumlah: null,
+                sumur_eksplorasi_active: null,
+                sumur_eksplorasi_total: null,
+                producer_active: null,
+                producer_total: null,
+                injector_active: null,
+                injector_total: null,
+                sumur_total_active: null,
+                sumur_total_total: null,
+                process_facilities_active: null,
+                process_facilities_total: null,
+                offshore_platforms_active: null,
+                offshore_platforms_total: null,
+                swamp_platforms_active: null,
+                swamp_platforms_total: null,
+                gas_compressors_active: null,
+                gas_compressors_total: null,
+                pipeline_active: null,
+                pipeline_total: null,
+                drilling_rigs: null,
+                workover_rigs: null,
             };
 
             lastData = d;
@@ -520,23 +564,27 @@
 
             // Card 1: info umum
             infoBody.innerHTML = `
-        <p><span class="font-semibold">Cakupan Lokasi:</span> ${d.cakupan_lokasi ?? '-'}</p>
-        <p><span class="font-semibold">Wilayah Kerja Operator:</span> ${d.wilayah_kerja_operator ?? '-'}</p>
-        <p><span class="font-semibold">Program Kerja:</span> ${d.program_kerja ?? '-'}</p>
-        <p><span class="font-semibold">Rig Pemboran / WOWS:</span> ${d.rig_pemboran ?? '-'} / ${d.rig_wows ?? '-'}</p>
+        <p><span class="font-semibold">Nama Wilayah:</span> ${d.nama_wilayah ?? '-'}</p>
+        <p><span class="font-semibold">Provinsi:</span> ${d.provinsi ?? '-'}</p>
+        <p><span class="font-semibold">Kabupaten/Kota:</span> ${d.kabupaten_kota ?? '-'}</p>
+        <p><span class="font-semibold">Jenis Wilayah Kerja:</span> ${d.jenis_wk ?? '-'}</p>
+        <p><span class="font-semibold">Tahun Beroperasi:</span> ${d.tahun_beroperasi ?? '-'}</p>
+        <p><span class="font-semibold">Luas Wilayah:</span> ${d.luas_wilayah ?? '-'}</p>
+        <p><span class="font-semibold">Deskripsi:</span> ${d.deskripsi ?? '-'}</p>
       `;
 
             // Card 2: produksi saja
             produksiBody.innerHTML = `
-        <p><span class="font-semibold">Tanggal:</span> ${d.tanggal_produksi ?? '-'}</p>
-        <p><span class="font-semibold">Oil:</span> ${d.produksi_oil_bopd ?? '-'} BOPD</p>
-        <p><span class="font-semibold">Gas:</span> ${d.produksi_gas_mmscfd ?? '-'} MMSCFD</p>
+        <p><span class="font-semibold">Produksi Minyak:</span> ${d.produksi_minyak ?? '-'}</p>
+        <p><span class="font-semibold">Produksi Gas:</span> ${d.produksi_gas ?? '-'}</p>
+        <p><span class="font-semibold">Tanggal Produksi:</span> ${d.tanggal_produksi ?? '-'}</p>
       `;
 
             // Card 3: fasilitas saja
             fasilitasBody.innerHTML = `
-        <p><span class="font-semibold">Jumlah Struktur:</span> ${d.jumlah_struktur ?? '-'}</p>
-        <p><span class="font-semibold">Stasiun Pengumpul:</span> ${d.stasiun_pengumpul ?? '-'}</p>
+        <p><span class="font-semibold">Nama Fasilitas:</span> ${d.nama_fasilitas ?? '-'}</p>
+        <p><span class="font-semibold">Jenis Fasilitas:</span> ${d.jenis_fasilitas ?? '-'}</p>
+        <p><span class="font-semibold">Jumlah:</span> ${d.jumlah ?? '-'}</p>
       `;
         }
 
@@ -555,20 +603,119 @@
             titleEl.textContent = `${lastNama} — Detail Lengkap`;
             bodyEl.innerHTML = `
           <p class="font-semibold text-blue-900">Info Umum</p>
-          <p><span class="font-semibold">Cakupan Lokasi:</span> ${d.cakupan_lokasi ?? '-'}</p>
-          <p><span class="font-semibold">Wilayah Kerja Operator:</span> ${d.wilayah_kerja_operator ?? '-'}</p>
-          <p><span class="font-semibold">Program Kerja:</span> ${d.program_kerja ?? '-'}</p>
-          <p><span class="font-semibold">Rig Pemboran:</span> ${d.rig_pemboran ?? '-'}</p>
-          <p><span class="font-semibold">Rig WOWS:</span> ${d.rig_wows ?? '-'}</p>
+          <p><span class="font-semibold">Nama Wilayah:</span> ${d.nama_wilayah ?? '-'}</p>
+          <p><span class="font-semibold">Provinsi:</span> ${d.provinsi ?? '-'}</p>
+          <p><span class="font-semibold">Kabupaten/Kota:</span> ${d.kabupaten_kota ?? '-'}</p>
+          <p><span class="font-semibold">Jenis Wilayah Kerja:</span> ${d.jenis_wk ?? '-'}</p>
+          <p><span class="font-semibold">Tahun Beroperasi:</span> ${d.tahun_beroperasi ?? '-'}</p>
+          <p><span class="font-semibold">Luas Wilayah:</span> ${d.luas_wilayah ?? '-'}</p>
+          <p><span class="font-semibold">Deskripsi:</span> ${d.deskripsi ?? '-'}</p>
           <hr class="my-3">
           <p class="font-semibold text-blue-900">Produksi</p>
           <p><span class="font-semibold">Tanggal Data:</span> ${d.tanggal_produksi ?? '-'}</p>
-          <p><span class="font-semibold">Produksi Oil:</span> ${d.produksi_oil_bopd ?? '-'} BOPD</p>
-          <p><span class="font-semibold">Produksi Gas:</span> ${d.produksi_gas_mmscfd ?? '-'} MMSCFD</p>
+          <p><span class="font-semibold">Produksi Minyak:</span> ${d.produksi_minyak ?? '-'} BOPD</p>
+          <p><span class="font-semibold">Produksi Gas:</span> ${d.produksi_gas ?? '-'} MMSCFD</p>
           <hr class="my-3">
           <p class="font-semibold text-blue-900">Fasilitas</p>
-          <p><span class="font-semibold">Jumlah Struktur:</span> ${d.jumlah_struktur ?? '-'}</p>
-          <p><span class="font-semibold">Stasiun Pengumpul:</span> ${d.stasiun_pengumpul ?? '-'}</p>
+          <p><span class="font-semibold">Nama Fasilitas:</span> ${d.nama_fasilitas ?? '-'}</p>
+          <p><span class="font-semibold">Jenis Fasilitas:</span> ${d.jenis_fasilitas ?? '-'}</p>
+          <p><span class="font-semibold">Jumlah:</span> ${d.jumlah ?? '-'}</p>
+          <p><span class="font-semibold">Nama Fasilitas:</span> ${d.nama_fasilitas ?? '-'}</p>
+          <p><span class="font-semibold">Jenis Fasilitas:</span> ${d.jenis_fasilitas ?? '-'}</p>
+          <p><span class="font-semibold">Jumlah:</span> ${d.jumlah ?? '-'}</p>
+          <hr class="my-3">
+
+          <p class="font-semibold text-blue-900 mb-2">Number of Assets</p>
+
+          <table class="w-full text-xs border border-slate-200 rounded-lg overflow-hidden mb-3">
+            <thead>
+              <tr class="bg-blue-900 text-white">
+                <th class="py-1.5 px-2 text-left font-semibold">Wells</th>
+                <th class="py-1.5 px-2 text-center font-semibold w-16">Active</th>
+                <th class="py-1.5 px-2 text-center font-semibold w-16">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-white">
+                <td class="py-1 px-2">Exploration & Delineation</td>
+                <td class="py-1 px-2 text-center">${d.sumur_eksplorasi_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.sumur_eksplorasi_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-blue-50">
+                <td class="py-1 px-2">Producer</td>
+                <td class="py-1 px-2 text-center">${d.producer_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.producer_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-1 px-2">Injector</td>
+                <td class="py-1 px-2 text-center">${d.injector_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.injector_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-blue-100 font-semibold">
+                <td class="py-1 px-2">Total</td>
+                <td class="py-1 px-2 text-center">${d.sumur_total_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.sumur_total_total ?? '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="w-full text-xs border border-slate-200 rounded-lg overflow-hidden mb-3">
+            <thead>
+              <tr class="bg-blue-900 text-white">
+                <th class="py-1.5 px-2 text-left font-semibold">Surface Facilities</th>
+                <th class="py-1.5 px-2 text-center font-semibold w-16">Active</th>
+                <th class="py-1.5 px-2 text-center font-semibold w-16">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-white">
+                <td class="py-1 px-2">Process Facilities</td>
+                <td class="py-1 px-2 text-center">${d.process_facilities_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.process_facilities_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-blue-50">
+                <td class="py-1 px-2">Offshore Platforms</td>
+                <td class="py-1 px-2 text-center">${d.offshore_platforms_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.offshore_platforms_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-1 px-2">Swamp Platforms</td>
+                <td class="py-1 px-2 text-center">${d.swamp_platforms_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.swamp_platforms_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-blue-50">
+                <td class="py-1 px-2">Gas Compressors</td>
+                <td class="py-1 px-2 text-center">${d.gas_compressors_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.gas_compressors_total ?? '-'}</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-1 px-2">Pipeline</td>
+                <td class="py-1 px-2 text-center">${d.pipeline_active ?? '-'}</td>
+                <td class="py-1 px-2 text-center">${d.pipeline_total ?? '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="text-[10px] italic text-slate-400">
+
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="bg-lime-50 border border-lime-200 rounded-lg p-2 text-xs">
+              <p class="font-semibold text-lime-800">Drilling Rigs</p>
+              <p>${d.drilling_rigs ?? '-'}</p>
+            </div>
+            <div class="bg-lime-50 border border-lime-200 rounded-lg p-2 text-xs">
+              <p class="font-semibold text-lime-800">Workover Rigs</p>
+              <p>${d.workover_rigs ?? '-'}</p>
+            </div>
+          </div>
+
+          <div class="text-[10px] italic text-slate-400">
+          <br>
+          <div class="text-xs italic text-slate-400 mt-4">
+            <p>Keterangan:</p>
+            <p>BOPD: Barrels of Oil Per Day</p>
+            <p>MMSCFD: Million Metric Standard Cubic Feet per Day</p>
+          </div>
         `;
 
             document.getElementById('modal-overlay').classList.add('show');
