@@ -12,7 +12,7 @@ class Produksi extends Model
     protected $primaryKey = 'id_produksi';
 
     protected $fillable = [
-        'fields_id',
+        'id_wilayah',
         'produksi_minyak',
         'produksi_gas',
         'tanggal_produksi',

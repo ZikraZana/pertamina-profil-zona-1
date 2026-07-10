@@ -17,6 +17,7 @@ class WilayahKerja extends Model
         'provinsi',
         'kabupaten_kota',
         'jenis_wilayah_kerja',
+        'luas_wilayah',
         'tahun_berdiri',
         'deskripsi',
     ];

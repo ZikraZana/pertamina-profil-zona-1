@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('provinsi');
             $table->string('kabupaten_kota');
             $table->string('jenis_wilayah_kerja');
+            $table->float('luas_wilayah');
             $table->string('tahun_berdiri');
             $table->string('deskripsi')->nullable();
             $table->timestamps();
